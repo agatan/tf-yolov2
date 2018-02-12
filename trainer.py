@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+from tqdm import tqdm
 
 from models.yolo import YOLO
 
@@ -19,6 +20,11 @@ class YOLOTrainer:
         self.merged_summary = tf.summary.merge_all()
         self.summary_writer = tf.summary.FileWriter(summary_dir)
         self.summary_writer.add_graph(sess.graph)
+
+    def train_epoch(self, generator, n_iter):
+        for image_data, gt_boxes, gt_detectors_mask, gt_matching_boxes in tqdm(generator, total=n_iter):
+            self.train_step(image_data, gt_boxes, gt_detectors_mask, gt_matching_boxes)
+        self.sess.run(self.model.increment_cur_epoch_op)
 
     def train_step(self, image_data: np.ndarray, gt_boxes: np.ndarray, gt_detectors_mask: np.ndarray, gt_matching_boxes: np.ndarray):
         loss, _, summary = self.sess.run([self.model.loss, self.model.train_op, self.merged_summary], feed_dict={
