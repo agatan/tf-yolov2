@@ -322,8 +322,11 @@ def _yolo_loss_function(args, anchors, n_classes):
         tf.square(matching_boxes - pred_boxes)
 
     confidence_loss_sum = tf.reduce_sum(confidence_loss)
+    tf.summary.scalar('confidence_loss', confidence_loss_sum)
     classification_loss_sum = tf.reduce_sum(classification_loss)
+    tf.summary.scalar('classification_loss', classification_loss_sum)
     coordinates_loss_sum = tf.reduce_sum(coordinates_loss)
+    tf.summary.scalar('coordinates_loss', coordinates_loss_sum)
     total_loss = 0.5 * (confidence_loss_sum +
                         classification_loss_sum + coordinates_loss_sum)
 
