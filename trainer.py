@@ -29,3 +29,4 @@ class YOLOTrainer:
         })
         cur_step = self.model.global_step_tensor.eval(self.sess)
         self.summary_writer.add_summary(summary, cur_step)
+        self.summary_writer.flush()
